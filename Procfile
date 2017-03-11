@@ -1,1 +1,1 @@
-web: gulp prod
+web: npm i && gulp prod
