@@ -12,7 +12,7 @@ module.exports = function (app) {
     Message.find({})
       .populate('owner')
       .exec(function(err, data) {
-        if(!err && data) 
+        if (!err && data) 
           res.send(data);
         else
           res.send('error');

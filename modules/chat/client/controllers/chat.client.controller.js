@@ -8,7 +8,8 @@
   ChatController.$inject = ['$scope', '$state', '$q', 'Authentication', 'Socket', 'MessagesService'];
 
   function ChatController($scope, $state, $q, Authentication, Socket, MessagesService) {
-    var vm = this;
+    var vm = this,
+      currentUsername = Authentication.user.username;
 
     vm.messages = [];
     vm.messageText = '';
@@ -45,8 +46,8 @@
       // Add an event listener to the 'chatMessage' event
       Socket.on('chatMessage', function (message) {
         vm.messages.unshift(message);
-        message.type !== 'status' && MessagesService.sendMessage({ 
-          message: vm.messages[0] 
+        message.type !== 'status' && message.username === currentUsername && MessagesService.sendMessage({ 
+          message: message
         }).$promise.then(function(data) {}).catch(function(err) {
           console.log('err');
         });
