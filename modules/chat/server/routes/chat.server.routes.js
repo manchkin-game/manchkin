@@ -2,15 +2,29 @@
 
 var mongoose = require('mongoose'),
   Message = mongoose.model('Message'),
+  User = mongoose.model('User'),
   _ = require('lodash');
 
 module.exports = function (app) {
 
   // Setting up the users profile api
   app.route('/api/messages').get(function(req, res) {
+    var resultDocs = [];
+
     Message.find({}, function(err, docs) {
       if (!err && docs) {
-        res.send(docs);
+        docs.forEach(function(item, i) {
+          User.findById(item.owner, function(err, found) {
+            if (!err && found) {
+              item.profileImageURL = found.profileImageURL;
+              item.username = found.username;
+              resultDocs.unshift(item);
+              if (i === docs.length - 1) {
+                res.send(resultDocs);
+              }
+            }
+          });
+        });
       } else {
         res.send('error');
       }

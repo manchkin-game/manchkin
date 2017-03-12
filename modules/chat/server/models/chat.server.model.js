@@ -27,7 +27,6 @@ var MessageSchema = new Schema({
     ref: 'User',
     required: true
   },
-  // TODO: сделать эти 2 поля через зависимость от USER
   username: {
     type: String
   },
@@ -35,7 +34,6 @@ var MessageSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
-  //
   type: {
     type: String,
     enum: ['message', 'status'],
@@ -45,28 +43,5 @@ var MessageSchema = new Schema({
     type: Date
   }
 });
-
-
-/**
- * Find possible not used username
- */
-MessageSchema.statics.findUniqueUsername = function (username, suffix, callback) {
-  var _this = this;
-  var possibleUsername = username.toLowerCase() + (suffix || '');
-
-  _this.findOne({
-    username: possibleUsername
-  }, function (err, user) {
-    if (!err) {
-      if (!user) {
-        callback(possibleUsername);
-      } else {
-        return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
-      }
-    } else {
-      callback(null);
-    }
-  });
-};
 
 mongoose.model('Message', MessageSchema);
