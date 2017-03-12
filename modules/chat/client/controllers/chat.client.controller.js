@@ -45,7 +45,7 @@
       // Add an event listener to the 'chatMessage' event
       Socket.on('chatMessage', function (message) {
         vm.messages.unshift(message);
-        message.type != 'status' && MessagesService.sendMessage({ 
+        message.type !== 'status' && MessagesService.sendMessage({ 
           message: vm.messages[0] 
         }).$promise.then(function(data) {}).catch(function(err) {
           console.log('err');
