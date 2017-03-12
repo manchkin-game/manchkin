@@ -22,6 +22,11 @@ var MessageSchema = new Schema({
     type: String,
     default: ''
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   // TODO: сделать эти 2 поля через зависимость от USER
   username: {
     type: String
