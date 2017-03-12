@@ -5,9 +5,9 @@
     .module('chat')
     .controller('ChatController', ChatController);
 
-  ChatController.$inject = ['$scope', '$state', 'Authentication', 'Socket'];
+  ChatController.$inject = ['$scope', '$state', '$q', 'Authentication', 'Socket', 'MessagesService'];
 
-  function ChatController($scope, $state, Authentication, Socket) {
+  function ChatController($scope, $state, $q, Authentication, Socket, MessagesService) {
     var vm = this;
 
     vm.messages = [];
@@ -15,6 +15,21 @@
     vm.sendMessage = sendMessage;
 
     init();
+
+    MessagesService.getMessages().$promise.then(function(data) {
+      data.forEach(function(item, i) {
+        var msg = {};
+        msg.text = item.text;
+        msg.username = item.username;
+        msg.profileImageURL = item.profileImageURL;
+        msg.type = item.type;
+        msg.created = item.created;
+        msg._someId = item._someId;
+        vm.messages.unshift(msg);
+      });
+    }).catch(function(err) {
+      console.log('error');
+    });
 
     function init() {
       // If user is not signed in then redirect back home
@@ -30,6 +45,11 @@
       // Add an event listener to the 'chatMessage' event
       Socket.on('chatMessage', function (message) {
         vm.messages.unshift(message);
+        message.type != 'status' && MessagesService.sendMessage({ 
+          message: vm.messages[0] 
+        }).$promise.then(function(data) {}).catch(function(err) {
+          console.log('err');
+        });
       });
 
       // Remove the event listener when the controller instance is destroyed
