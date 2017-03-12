@@ -17,11 +17,11 @@
     init();
 
     MessagesService.getMessages().$promise.then(function(data) {
-      data.forEach(function(item, i) {
+      data.forEach(function(item) {
         var msg = {};
         msg.text = item.text;
-        msg.username = item.username;
-        msg.profileImageURL = item.profileImageURL;
+        msg.username = item.owner.username;
+        msg.profileImageURL = item.owner.profileImageURL;
         msg.type = item.type;
         msg.created = item.created;
         msg._someId = item._someId;

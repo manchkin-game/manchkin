@@ -9,26 +9,14 @@ module.exports = function (app) {
 
   // Setting up the users profile api
   app.route('/api/messages').get(function(req, res) {
-    var resultDocs = [];
-
-    Message.find({}, function(err, docs) {
-      if (!err && docs) {
-        docs.forEach(function(item, i) {
-          User.findById(item.owner, function(err, found) {
-            if (!err && found) {
-              item.profileImageURL = found.profileImageURL;
-              item.username = found.username;
-              resultDocs.unshift(item);
-              if (i === docs.length - 1) {
-                res.send(resultDocs);
-              }
-            }
-          });
-        });
-      } else {
-        res.send('error');
-      }
-    });
+    Message.find({})
+      .populate('owner')
+      .exec(function(err, data) {
+        if(!err && data) 
+          res.send(data);
+        else
+          res.send('error');
+      });
   });
   app.route('/api/messages').post(function(req, res) {
     var item = JSON.parse(req.query.message),

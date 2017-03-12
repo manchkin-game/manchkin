@@ -27,13 +27,6 @@ var MessageSchema = new Schema({
     ref: 'User',
     required: true
   },
-  username: {
-    type: String
-  },
-  profileImageURL: {
-    type: String,
-    default: 'modules/users/client/img/profile/default.png'
-  },
   type: {
     type: String,
     enum: ['message', 'status'],
